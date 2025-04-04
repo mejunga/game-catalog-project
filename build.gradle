@@ -1,0 +1,41 @@
+plugins {
+    id 'java'
+    id 'application'
+    id 'org.openjfx.javafxplugin' version '0.0.13'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.openjfx:javafx-controls:21'
+    implementation 'org.openjfx:javafx-fxml:21'
+    implementation 'org.openjfx:javafx-graphics:21'
+    testImplementation 'junit:junit:4.13.2'
+}
+
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(21))
+    }
+}
+
+application {
+    mainClass = 'com.example.gamecatalog.GameCatalogApp'
+    mainModule = 'com.example.gamecatalog'
+}
+
+javafx {
+    version = "21"
+    modules = ['javafx.controls', 'javafx.fxml', 'javafx.graphics'] 
+}
+
+tasks.named('run') {
+    doFirst {
+        jvmArgs = [
+            "--module-path", classpath.asPath, 
+            "--add-modules", "javafx.controls,javafx.fxml"
+        ]
+    }
+}

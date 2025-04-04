@@ -1,0 +1,44 @@
+# Gradle files
+.gradle/
+build/
+
+# IntelliJ IDEA
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# VSCode
+.vscode/
+*.code-workspace
+
+# Eclipse
+.project
+.classpath
+.settings/
+
+# Logs and temp files
+*.log
+hs_err_pid*
+replay_pid*
+
+# Compiled Java classes
+**/*.class
+
+# Generated JARs
+*.jar
+*.war
+*.ear
+
+# JavaFX-related files
+jfxrt.jar
+javafx-sdk/
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Dependency caches
+**/out/
+**/bin/
+!gradle/wrapper/gradle-wrapper.jar
