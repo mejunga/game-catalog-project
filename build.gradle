@@ -39,3 +39,9 @@ tasks.named('run') {
         ]
     }
 }
+
+task printClasspath {
+    doLast {
+        println sourceSets.main.runtimeClasspath.asPath
+    }
+}
