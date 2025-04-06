@@ -1,4 +1,4 @@
-package com.example.gamecatalog;
+package com.example.gamecatalog.model;
 
 import java.util.ArrayList;
 import java.util.List;

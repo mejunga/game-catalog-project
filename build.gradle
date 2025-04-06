@@ -31,6 +31,17 @@ javafx {
     modules = ['javafx.controls', 'javafx.fxml', 'javafx.graphics'] 
 }
 
+task createRuntimeImage(type: Exec) {
+    description = 'Creates a custom runtime image using jlink'
+    group = 'build'
+    commandLine 'jlink',
+                '--module-path', sourceSets.main.runtimeClasspath.asPath,
+                '--add-modules', 'java.base,javafx.controls,javafx.fxml,javafx.graphics',
+                '--output', "$buildDir/customRuntime"
+}
+
+tasks.build.dependsOn createRuntimeImage
+
 tasks.named('run') {
     doFirst {
         jvmArgs = [
