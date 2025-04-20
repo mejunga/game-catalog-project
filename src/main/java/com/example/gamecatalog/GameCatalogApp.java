@@ -24,7 +24,7 @@ public class GameCatalogApp extends Application {
         primaryStage.initStyle(StageStyle.UNDECORATED);
         primaryStage.initStyle(StageStyle.TRANSPARENT);
         primaryStage.setMinHeight(660);
-        primaryStage.setMinWidth(1110);
+        primaryStage.setMinWidth(1140);
         primaryStage.setScene(scene);
         primaryStage.show();
     }

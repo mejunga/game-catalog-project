@@ -88,9 +88,9 @@
                <center>
                   <AnchorPane prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #5E5E5E;" BorderPane.alignment="CENTER">
                      <children>
-                        <ScrollPane hbarPolicy="NEVER" prefHeight="450.0" prefWidth="870.0" vbarPolicy="AS_NEEDED" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="50.0">
+                        <ScrollPane hbarPolicy="NEVER" prefHeight="450.0" prefWidth="870.0" vbarPolicy="AS_NEEDED" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="50.0" fitToWidth="true">
                            <content>
-                              <FlowPane fx:id="game_card_flow" hgap="7.5" prefHeight="430.0" prefWidth="870.0" vgap="7.5">
+                              <FlowPane fx:id="game_card_flow" hgap="7.5" prefHeight="430.0" vgap="7.5" minWidth="842.5">
                                  <padding>
                                     <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                                  </padding>
