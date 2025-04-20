@@ -15,7 +15,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="base" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="660.0" prefWidth="1110.0" style="-fx-background-color: rgba(0, 0, 0, 0.01);" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.gamecatalog.GameCatalogController">
+<AnchorPane fx:id="base" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="660.0" prefWidth="1110.0" style="-fx-background-color: rgba(0, 0, 0, 0.01);" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.gamecatalog.controller.GameCatalogController">
    <children>
       <AnchorPane AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
          <children>
@@ -25,9 +25,9 @@
                      <children>
                         <AnchorPane fx:id="title_bar" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                            <children>
-                              <Button fx:id="minimize" mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" text="_" textFill="WHITE" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="0.0" />
-                              <Button fx:id="restore_maximize" mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" text="[]" textFill="WHITE" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="0.0" />
-                              <Button fx:id="close" mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" text="X" textFill="WHITE" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                              <Button fx:id="minimize" mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" text="_" textFill="WHITE" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="0.0" onAction="#handleMinimize"/>
+                              <Button fx:id="restore_maximize" mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" text="[]" textFill="WHITE" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="0.0" onAction="#handleRestoreMaximize"/>
+                              <Button fx:id="close" mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" text="X" textFill="WHITE" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" onAction="#handleClose"/>
                               <Label prefHeight="35.0" prefWidth="127.5" text="GameMage" textFill="WHITE" AnchorPane.leftAnchor="55.0" AnchorPane.topAnchor="0.0">
                                  <font>
                                     <Font name="Calibri" size="25.0" />
@@ -35,7 +35,7 @@
                               </Label>
                               <ImageView fitHeight="32.0" fitWidth="56.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="2.5" AnchorPane.topAnchor="2.5">
                                  <image>
-                                    <Image url="@../icon-1.png" />
+                                    <Image url="@../icons/game-mage-icon1.png" />
                                  </image>
                               </ImageView>
                               <MenuButton fx:id="file_menu" mnemonicParsing="false" prefHeight="30.0" prefWidth="70.0" text="File" AnchorPane.leftAnchor="182.5" AnchorPane.topAnchor="0.0">

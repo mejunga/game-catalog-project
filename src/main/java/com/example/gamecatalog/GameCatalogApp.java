@@ -1,5 +1,7 @@
 package com.example.gamecatalog;
 
+import com.example.gamecatalog.controller.GameCatalogController;
+
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
