@@ -208,7 +208,7 @@
 
   },
   {
-    "title" : "Counter-Strike 2",
+    "title" : "Counter-Strike 3",
     "developer" : "Valve",
     "publisher" : "Valve",
     "genres" : [ "FPS", "Tactical Shooter" ],
@@ -218,7 +218,7 @@
     "releaseYear" : 2023,
     "language" : "Multiple",
     "rating" : 9.0,
-    "tags" : [ "FPS", "Competitive", "Team-Based", "Tactical" ],
+    "tags" : [ "FPS", "Competitive", "Team-Based", "Tactical", "Favorite" ],
     "coverImagePath" : null,
     "descriptionPath" : null
 

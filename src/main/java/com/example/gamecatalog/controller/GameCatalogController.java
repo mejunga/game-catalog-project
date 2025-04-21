@@ -15,7 +15,10 @@ import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
@@ -316,11 +319,13 @@ public class GameCatalogController
         private final List<Game> gameList;
         private final FlowPane flowPane;
         private final int pageNumber;
+        private final GameRepository gameRepository;
 
         public Renderer(List<Game> list, FlowPane flowPane, int page) {
             this.gameList = list;
             this.flowPane = flowPane;
             this.pageNumber = page;
+            this.gameRepository = new GameRepository();
         }
 
         @Override
@@ -329,7 +334,8 @@ public class GameCatalogController
                 int index = i + 100 * (pageNumber - 1);
                 if (index >= gameList.size()) break;
 
-                Game game = gameList.get(index);
+                final int gameIndex = index; // Final copy for lambda expressions
+                Game game = gameList.get(gameIndex);
 
                 try {
                     FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/game-card-view.fxml"));
@@ -350,12 +356,138 @@ public class GameCatalogController
                             game.getPublisher() + " / " + game.getReleaseYear()
                         );
                     }
+                    
+                    // Set up the context menu actions
+                    controller.setOnUpdateGame(() -> handleUpdateGame(gameIndex, game));
+                    controller.setOnRemoveGame(() -> handleRemoveGame(gameIndex, game));
+                    controller.setOnAddToFavorite(() -> handleAddToFavorite(game));
 
                     Platform.runLater(() -> flowPane.getChildren().add(card));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
+        }
+        
+        private void handleUpdateGame(int index, Game game) {
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/add-game-form.fxml"));
+                Parent root = loader.load();
+                
+                AddGameController controller = loader.getController();
+                controller.setForUpdate(game, index);
+                
+                Stage updateGameStage = new Stage();
+                updateGameStage.initModality(Modality.APPLICATION_MODAL);
+                updateGameStage.initStyle(StageStyle.UNDECORATED);
+                updateGameStage.setScene(new Scene(root));
+                
+                controller.setStage(updateGameStage);
+                
+                updateGameStage.showAndWait();
+                
+                // Refresh game list after update
+                Platform.runLater(() -> {
+                    GameCatalogController mainController = getGameCatalogController();
+                    if (mainController != null) {
+                        mainController.forceRefreshGameList();
+                    }
+                });
+            } catch (IOException e) {
+                e.printStackTrace();
+                showAlert("Error", "Failed to open update form: " + e.getMessage());
+            }
+        }
+        
+        private void handleRemoveGame(int index, Game game) {
+            Alert alert = new Alert(AlertType.CONFIRMATION);
+            alert.setTitle("Remove Game");
+            alert.setHeaderText("Remove " + game.getTitle());
+            alert.setContentText("Are you sure you want to remove this game from your catalog?");
+            
+            if (alert.showAndWait().get() == ButtonType.OK) {
+                // Create a new repository instance to ensure fresh data
+                GameRepository gameRepository = new GameRepository();
+                
+                // Find the game by title and other properties since the index might be wrong
+                List<Game> allGames = gameRepository.getAllGames();
+                int correctIndex = -1;
+                
+                // Find the game by matching title, publisher and developer
+                for (int i = 0; i < allGames.size(); i++) {
+                    Game g = allGames.get(i);
+                    if (g.getTitle().equals(game.getTitle()) &&
+                        g.getPublisher().equals(game.getPublisher()) &&
+                        g.getDeveloper().equals(game.getDeveloper())) {
+                        correctIndex = i;
+                        break;
+                    }
+                }
+                
+                if (correctIndex >= 0 && gameRepository.removeGame(correctIndex)) {
+                    // Save changes to the JSON file
+                    boolean saved = gameRepository.saveGames();
+                    if (saved) {
+                        showAlert("Success", "Game removed successfully");
+                        
+                        // Refresh game list after removal
+                        Platform.runLater(() -> {
+                            GameCatalogController mainController = getGameCatalogController();
+                            if (mainController != null) {
+                                mainController.forceRefreshGameList();
+                            }
+                        });
+                    } else {
+                        showAlert("Error", "Failed to save changes after removing the game.");
+                    }
+                } else {
+                    showAlert("Error", "Failed to find or remove the game from catalog.");
+                }
+            }
+        }
+        
+        private void handleAddToFavorite(Game game) {
+            // Set the favorite flag in the game object
+            List<String> tags = game.getTags();
+            if (!tags.contains("Favorite")) {
+                tags.add("Favorite");
+                game.setTags(tags);
+                
+                // Save the updated game
+                gameRepository.saveGames();
+                
+                showAlert("Success", game.getTitle() + " added to favorites!");
+            } else {
+                showAlert("Info", game.getTitle() + " is already in favorites.");
+            }
+        }
+        
+        private void showAlert(String title, String message) {
+            Platform.runLater(() -> {
+                Alert alert = new Alert(AlertType.INFORMATION);
+                alert.setTitle(title);
+                alert.setHeaderText(null);
+                alert.setContentText(message);
+                alert.showAndWait();
+            });
+        }
+        
+        private GameCatalogController getGameCatalogController() {
+            // This is a simplified approach - in a real app you would use a proper
+            // reference to the main controller via dependency injection or similar
+            try {
+                for (javafx.stage.Window window : javafx.stage.Window.getWindows()) {
+                    if (window instanceof Stage) {
+                        Stage stage = (Stage) window;
+                        if (stage.getScene() != null && stage.getScene().getRoot() != null) {
+                            return (GameCatalogController) stage.getScene().getUserData();
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
         }
     }
     
@@ -366,7 +498,12 @@ public class GameCatalogController
         // Initialize the page number field
         page_number.setText(String.valueOf(pageNumber));
         
+        // Store this controller in the scene's user data for access from other classes
         Platform.runLater(() -> {
+            if (stage != null && stage.getScene() != null) {
+                stage.getScene().setUserData(this);
+            }
+            
             base.setOnMouseMoved(e -> {
                 base.setCursor(getCursorForPosition(e));
             });

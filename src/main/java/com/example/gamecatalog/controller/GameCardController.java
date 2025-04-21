@@ -1,8 +1,11 @@
 package com.example.gamecatalog.controller;
 
 import javafx.fxml.FXML;
+import javafx.geometry.Bounds;
 import javafx.scene.control.Button;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
@@ -18,6 +21,9 @@ public class GameCardController {
     @FXML private Label game_info;
 
     private Runnable onDoubleClickAction;
+    private Runnable onUpdateGame;
+    private Runnable onRemoveGame;
+    private Runnable onAddToFavorite;
 
     public void setGameData(String title, String gameInfo){
         this.title.setText(title);
@@ -69,6 +75,18 @@ public class GameCardController {
     public void setOnDoubleClick(Runnable action) {
         this.onDoubleClickAction = action;
     }
+    
+    public void setOnUpdateGame(Runnable action) {
+        this.onUpdateGame = action;
+    }
+    
+    public void setOnRemoveGame(Runnable action) {
+        this.onRemoveGame = action;
+    }
+    
+    public void setOnAddToFavorite(Runnable action) {
+        this.onAddToFavorite = action;
+    }
 
     private void openGameDetails(){
 
@@ -83,6 +101,33 @@ public class GameCardController {
     }
 
     public void initialize(){
-
+        setupOptionsMenu();
+    }
+    
+    private void setupOptionsMenu() {
+        ContextMenu contextMenu = new ContextMenu();
+        
+        MenuItem updateItem = new MenuItem("Update Game");
+        updateItem.setOnAction(event -> {
+            if (onUpdateGame != null) onUpdateGame.run();
+        });
+        
+        MenuItem removeItem = new MenuItem("Remove Game");
+        removeItem.setOnAction(event -> {
+            if (onRemoveGame != null) onRemoveGame.run();
+        });
+        
+        MenuItem favoriteItem = new MenuItem("Add to Favorite");
+        favoriteItem.setOnAction(event -> {
+            if (onAddToFavorite != null) onAddToFavorite.run();
+        });
+        
+        contextMenu.getItems().addAll(updateItem, removeItem, favoriteItem);
+        
+        game_options.setOnAction(event -> {
+            // Position the context menu right below the button
+            Bounds bounds = game_options.localToScreen(game_options.getBoundsInLocal());
+            contextMenu.show(game_options, bounds.getMinX(), bounds.getMaxY());
+        });
     }
 }

@@ -47,6 +47,8 @@ public class AddGameController {
     private GameRepository gameRepository;
     private File selectedImageFile;
     private Stage stage;
+    private boolean isUpdateMode = false;
+    private int gameIndex = -1;
 
     /**
      * Initializes the controller.
@@ -62,6 +64,65 @@ public class AddGameController {
      */
     public void setStage(Stage stage) {
         this.stage = stage;
+    }
+    
+    /**
+     * Sets up the form for updating an existing game.
+     *
+     * @param game the game to update
+     * @param index the index of the game in the repository
+     */
+    public void setForUpdate(Game game, int index) {
+        isUpdateMode = true;
+        gameIndex = index;
+        
+        // Populate fields with game data
+        titleField.setText(game.getTitle());
+        developerField.setText(game.getDeveloper());
+        publisherField.setText(game.getPublisher());
+        
+        if (game.getGenres() != null && !game.getGenres().isEmpty()) {
+            genresField.setText(String.join(", ", game.getGenres()));
+        }
+        
+        if (game.getPlatforms() != null && !game.getPlatforms().isEmpty()) {
+            platformsField.setText(String.join(", ", game.getPlatforms()));
+        }
+        
+        if (game.getTranslators() != null && !game.getTranslators().isEmpty()) {
+            translatorsField.setText(String.join(", ", game.getTranslators()));
+        }
+        
+        if (game.getSteamId() != null) {
+            steamIdField.setText(game.getSteamId().toString());
+        }
+        
+        if (game.getReleaseYear() != null) {
+            releaseYearField.setText(game.getReleaseYear().toString());
+        }
+        
+        if (game.getLanguage() != null) {
+            languageField.setText(game.getLanguage());
+        }
+        
+        if (game.getRating() != null) {
+            ratingField.setText(game.getRating().toString());
+        }
+        
+        if (game.getTags() != null && !game.getTags().isEmpty()) {
+            tagsField.setText(String.join(", ", game.getTags()));
+        }
+        
+        if (game.getCoverImagePath() != null) {
+            coverImageField.setText(game.getCoverImagePath());
+        }
+        
+        if (game.getDescriptionPath() != null) {
+            descriptionField.setText(game.getDescriptionPath());
+        }
+        
+        // Update button text
+        saveButton.setText("Update Game");
     }
 
     /**
@@ -95,18 +156,29 @@ public class AddGameController {
             
             if (coverImagePath != null) {
                 game.setCoverImagePath(coverImagePath);
+            } else if (!coverImageField.getText().trim().isEmpty()) {
+                // Preserve existing cover image path if no new image is selected
+                game.setCoverImagePath(coverImageField.getText().trim());
             }
 
-            gameRepository.addGame(game);
+            if (isUpdateMode && gameIndex >= 0) {
+                // Update existing game
+                gameRepository.updateGame(gameIndex, game);
+                showAlert(AlertType.INFORMATION, "Success", "Game Updated", 
+                        "The game has been updated successfully.");
+            } else {
+                // Add new game
+                gameRepository.addGame(game);
+                showAlert(AlertType.INFORMATION, "Success", "Game Added", 
+                        "The game has been added successfully.");
+            }
+            
             gameRepository.saveGames();
-            
-            showAlert(AlertType.INFORMATION, "Success", "Game Added", 
-                    "The game has been added successfully.");
-            
             closeWindow();
         } catch (Exception e) {
-            showAlert(AlertType.ERROR, "Error", "Failed to Save Game", 
-                    "An error occurred while saving the game: " + e.getMessage());
+            String action = isUpdateMode ? "updating" : "saving";
+            showAlert(AlertType.ERROR, "Error", "Failed to " + action + " Game", 
+                    "An error occurred while " + action + " the game: " + e.getMessage());
         }
     }
 
