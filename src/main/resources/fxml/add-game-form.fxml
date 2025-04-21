@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="650.0" prefWidth="600.0" style="-fx-background-color: #555555;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.gamecatalog.controller.AddGameController">
+   <children>
+      <VBox prefHeight="650.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <HBox alignment="CENTER" prefHeight="60.0" prefWidth="600.0" style="-fx-background-color: #111111;">
+               <children>
+                  <Label text="Add New Game" textFill="WHITE">
+                     <font>
+                        <Font name="System Bold" size="24.0" />
+                     </font>
+                  </Label>
+               </children>
+            </HBox>
+            <ScrollPane fitToWidth="true" prefHeight="530.0" prefWidth="580.0" VBox.vgrow="ALWAYS">
+               <content>
+                  <VBox prefWidth="580.0" spacing="10.0" style="-fx-background-color: #5E5E5E;">
+                     <padding>
+                        <Insets bottom="20.0" left="20.0" right="20.0" top="10.0" />
+                     </padding>
+                     <children>
+                        <Label text="Required Information" textFill="WHITE">
+                           <font>
+                              <Font name="System Bold" size="16.0" />
+                           </font>
+                        </Label>
+                        <Separator prefWidth="540.0" />
+                        <GridPane hgap="10.0" vgap="10.0">
+                          <columnConstraints>
+                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="150.0" minWidth="150.0" prefWidth="150.0" />
+                            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                          </columnConstraints>
+                          <rowConstraints>
+                            <RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                            <RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                            <RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                          </rowConstraints>
+                           <children>
+                              <Label text="Title:" textFill="WHITE">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </Label>
+                              <Label text="Developer:" textFill="WHITE" GridPane.rowIndex="1">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </Label>
+                              <Label text="Publisher:" textFill="WHITE" GridPane.rowIndex="2">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </Label>
+                              <TextField fx:id="titleField" GridPane.columnIndex="1" />
+                              <TextField fx:id="developerField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                              <TextField fx:id="publisherField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                           </children>
+                        </GridPane>
+                        <Label text="Additional Information" textFill="WHITE">
+                           <font>
+                              <Font name="System Bold" size="16.0" />
+                           </font>
+                           <VBox.margin>
+                              <Insets top="10.0" />
+                           </VBox.margin>
+                        </Label>
+                        <Separator prefWidth="540.0" />
+                        <GridPane hgap="10.0" vgap="10.0">
+                           <columnConstraints>
+                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="150.0" minWidth="150.0" prefWidth="150.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                           </columnConstraints>
+                           <rowConstraints>
+                              <RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                           </rowConstraints>
+                           <children>
+                              <Label text="Genres (CSV):" textFill="WHITE">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </Label>
+                              <Label text="Platforms (CSV):" textFill="WHITE" GridPane.rowIndex="1">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </Label>
+                              <Label text="Translators (CSV):" textFill="WHITE" GridPane.rowIndex="2">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </Label>
+                              <TextField fx:id="genresField" promptText="RPG, Action, Open World" GridPane.columnIndex="1" />
+                              <TextField fx:id="platformsField" promptText="PC, PlayStation 4, Xbox One" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                              <TextField fx:id="translatorsField" promptText="Translator1, Translator2" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                              <Label text="Steam ID:" textFill="WHITE" GridPane.rowIndex="3">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </Label>
+                              <TextField fx:id="steamIdField" promptText="Optional numeric ID" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                              <Label text="Release Year:" textFill="WHITE" GridPane.rowIndex="4">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </Label>
+                              <TextField fx:id="releaseYearField" promptText="e.g., 2023" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                              <Label text="Language:" textFill="WHITE" GridPane.rowIndex="5">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </Label>
+                              <TextField fx:id="languageField" promptText="English" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                              <Label text="Rating:" textFill="WHITE" GridPane.rowIndex="6">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </Label>
+                              <TextField fx:id="ratingField" promptText="0.0 - 10.0" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+                              <Label text="Tags (CSV):" textFill="WHITE" GridPane.rowIndex="7">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </Label>
+                              <TextField fx:id="tagsField" promptText="Fantasy, Open World, RPG" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+                              <Label text="Cover Image:" textFill="WHITE" GridPane.rowIndex="8">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </Label>
+                              <HBox alignment="CENTER_LEFT" spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="8">
+                                 <children>
+                                    <TextField fx:id="coverImageField" disable="true" prefHeight="25.0" prefWidth="256.0" promptText="No file selected" />
+                                    <Button fx:id="browseButton" mnemonicParsing="false" onAction="#handleBrowseImage" text="Browse" />
+                                 </children>
+                              </HBox>
+                              <Label text="Description:" textFill="WHITE" GridPane.rowIndex="9">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </Label>
+                              <TextField fx:id="descriptionField" promptText="Optional description path" GridPane.columnIndex="1" GridPane.rowIndex="9" />
+                           </children>
+                        </GridPane>
+                     </children>
+                  </VBox>
+               </content>
+            </ScrollPane>
+            <HBox alignment="CENTER" prefHeight="60.0" prefWidth="600.0" spacing="20.0" style="-fx-background-color: #333333;">
+               <children>
+                  <Button fx:id="saveButton" mnemonicParsing="false" onAction="#handleSave" prefHeight="30.0" prefWidth="100.0" text="Save">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Button>
+                  <Button fx:id="cancelButton" mnemonicParsing="false" onAction="#handleCancel" prefHeight="30.0" prefWidth="100.0" text="Cancel">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Button>
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+   </children>
+</AnchorPane> 

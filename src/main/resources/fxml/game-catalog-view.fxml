@@ -81,7 +81,11 @@
                         <MenuButton fx:id="release_year_filter" mnemonicParsing="false" prefHeight="30.0" prefWidth="170.0" text="Release Year" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="270.0" />
                         <MenuButton fx:id="publisher_filter" mnemonicParsing="false" prefHeight="30.0" prefWidth="170.0" text="Publisher" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="315.0" />
                         <MenuButton fx:id="developper_filter" mnemonicParsing="false" prefHeight="30.0" prefWidth="170.0" text="Developper" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="360.0" />
-                        <Button fx:id="add_game" mnemonicParsing="false" prefHeight="30.0" prefWidth="80.0" text="Add Game" AnchorPane.bottomAnchor="50.0" AnchorPane.rightAnchor="60.0" />
+                        <Button fx:id="add_game" mnemonicParsing="false" prefHeight="30.0" prefWidth="100.0" text="Add Game" AnchorPane.bottomAnchor="50.0" AnchorPane.rightAnchor="60.0" onAction="#handleAddGame" style="-fx-background-color: #2D72D2; -fx-text-fill: white;">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font>
+                        </Button>
                      </children>
                   </AnchorPane>
                </right>

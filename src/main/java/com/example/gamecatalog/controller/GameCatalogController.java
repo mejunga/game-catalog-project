@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 
 import com.example.gamecatalog.model.Game;
+import com.example.gamecatalog.repository.GameRepository;
 
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -12,14 +13,18 @@ import javafx.geometry.Point2D;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
+import javafx.stage.Modality;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 public class GameCatalogController 
 {
@@ -112,6 +117,81 @@ public class GameCatalogController
 
     @FXML private void handlePreviousPage(){
         
+    }
+
+    @FXML private void handleAddGame() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/add-game-form.fxml"));
+            Parent root = loader.load();
+            
+            AddGameController controller = loader.getController();
+            
+            Stage addGameStage = new Stage();
+            addGameStage.initModality(Modality.APPLICATION_MODAL);
+            addGameStage.initStyle(StageStyle.UNDECORATED);
+            addGameStage.setScene(new Scene(root));
+            
+            controller.setStage(addGameStage);
+            
+            addGameStage.showAndWait();
+            
+            // Force a full refresh of the game list
+            forceRefreshGameList();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Forces a complete refresh of the game list by reloading from repository
+     * and rebuilding the UI components.
+     */
+    private void forceRefreshGameList() {
+        // Clear existing items first
+        Platform.runLater(() -> game_card_flow.getChildren().clear());
+        
+        // Create a new repository instance and reload games
+        GameRepository gameRepository = new GameRepository();
+        allGamesList = gameRepository.getAllGames();
+        
+        // Wait a moment to ensure file system operations complete
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+        
+        // Rebuild the flow pane
+        new Thread(() -> {
+            Platform.runLater(() -> {
+                // Clear again just to be safe
+                game_card_flow.getChildren().clear();
+                
+                // Render games
+                render(allGamesList, game_card_flow, pageNumber);
+                
+                // Update page number display
+                page_number.setText(String.valueOf(pageNumber));
+            });
+        }).start();
+    }
+
+    /**
+     * Refreshes the game list by loading games from repository.
+     */
+    private void refreshGameList() {
+        GameRepository gameRepository = new GameRepository();
+        allGamesList = gameRepository.getAllGames();
+        render(allGamesList, game_card_flow, pageNumber);
+    }
+
+    public static void render(List<Game> list, FlowPane flowPane, int page) {
+        maxPage = (int) Math.ceil((double) list.size() / 100);
+        
+        // Clear the existing flow pane items
+        Platform.runLater(() -> flowPane.getChildren().clear());
+        
+        new Renderer(list, flowPane, page).start();
     }
 
     public void setStage(Stage stage){
@@ -232,12 +312,6 @@ public class GameCatalogController
         }
     }
 
-    public static void render(List<Game> list, FlowPane flowPane, int page) {
-        maxPage = (int) Math.ceil((double) list.size() / 100);
-
-        new Renderer(list, flowPane, page).start();
-    }
-
     private static class Renderer extends Thread {
         private final List<Game> gameList;
         private final FlowPane flowPane;
@@ -262,8 +336,20 @@ public class GameCatalogController
                     Node card = loader.load();
 
                     GameCardController controller = loader.getController();
-                    controller.setGameData(game.getTitle(), game.getPublisher() + " / " + game.getReleaseYear()
-                    );
+                    
+                    // Pass the cover image path if available
+                    if (game.getCoverImagePath() != null && !game.getCoverImagePath().isEmpty()) {
+                        controller.setGameData(
+                            game.getTitle(), 
+                            game.getPublisher() + " / " + game.getReleaseYear(),
+                            game.getCoverImagePath()
+                        );
+                    } else {
+                        controller.setGameData(
+                            game.getTitle(), 
+                            game.getPublisher() + " / " + game.getReleaseYear()
+                        );
+                    }
 
                     Platform.runLater(() -> flowPane.getChildren().add(card));
                 } catch (IOException e) {
@@ -274,6 +360,12 @@ public class GameCatalogController
     }
     
     public void initialize(){
+        // Load games from repository
+        refreshGameList();
+        
+        // Initialize the page number field
+        page_number.setText(String.valueOf(pageNumber));
+        
         Platform.runLater(() -> {
             base.setOnMouseMoved(e -> {
                 base.setCursor(getCursorForPosition(e));
@@ -287,8 +379,6 @@ public class GameCatalogController
             base.setOnMouseDragged(e -> {
                 resizeWindow(e);
             });
-
-            render(allGamesList, game_card_flow, 1);
         });
 
         title_bar.setOnMousePressed(e -> {
