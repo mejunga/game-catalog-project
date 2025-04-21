@@ -21,6 +21,7 @@ public class GameCardController {
     public void setGameData(String title, String gameInfo){
         this.title.setText(title);
         game_info.setText(gameInfo);
+        game_image.setImage(new Image(getClass().getResourceAsStream("/icons/blank-gamecard-icon.png")));
     }
 
     public void setGameData(String title, String gameInfo, String imageURL){

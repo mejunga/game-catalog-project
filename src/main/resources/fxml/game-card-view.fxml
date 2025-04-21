@@ -9,13 +9,9 @@
 <?import javafx.scene.text.Font?>
 
 
-<AnchorPane fx:id="card_base" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="265.0" prefWidth="200.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.gamecatalog.controller.GameCardController" onMouseClicked="#handleCardClicked">
+<AnchorPane fx:id="card_base" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="265.0" prefWidth="200.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.gamecatalog.controller.GameCardController" onMouseClicked="#handleCardClicked">
    <children>
-      <ImageView fx:id="game_image" fitHeight="186.0" fitWidth="186.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="7.0" AnchorPane.rightAnchor="7.0" AnchorPane.topAnchor="7.0">
-         <image>
-            <Image url="@../icons/blank-gamecard-icon.png"/>
-         </image>
-      </ImageView>
+      <ImageView fx:id="game_image" fitHeight="186.0" fitWidth="186.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="7.0" AnchorPane.rightAnchor="7.0" AnchorPane.topAnchor="7.0"/>
       <HBox AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="200.0">
          <children>
             <Label fx:id="title" prefHeight="30.0" prefWidth="150.0" text="Game Title" HBox.hgrow="NEVER">

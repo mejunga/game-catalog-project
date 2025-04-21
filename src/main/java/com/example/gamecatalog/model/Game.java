@@ -10,14 +10,13 @@ public class Game {
     private List<String> genres;
     private List<String> platforms;
     private List<String> translators;
-    private String steamId;
+    private Integer steamId;
     private Integer releaseYear;
-    private Double playtime;
-    private String format;
     private String language;
     private Double rating;
     private List<String> tags;
     private String coverImagePath;
+    private String descrptionPath;
 
     // Default constructor for Jackson
     public Game() {
@@ -38,9 +37,8 @@ public class Game {
     // Full constructor
     public Game(String title, String developer, String publisher,
                 List<String> genres, List<String> platforms, List<String> translators,
-                String steamId, Integer releaseYear, Double playtime,
-                String format, String language, Double rating,
-                List<String> tags, String coverImagePath) {
+                Integer steamId, Integer releaseYear, String language, Double rating,
+                List<String> tags, String coverImagePath, String descrptionPath) {
         this.title = title;
         this.developer = developer;
         this.publisher = publisher;
@@ -49,12 +47,11 @@ public class Game {
         this.translators = translators != null ? new ArrayList<>(translators) : new ArrayList<>();
         this.steamId = steamId;
         this.releaseYear = releaseYear;
-        this.playtime = playtime;
-        this.format = format;
         this.language = language;
         this.rating = rating;
         this.tags = tags != null ? new ArrayList<>(tags) : new ArrayList<>();
         this.coverImagePath = coverImagePath;
+        this.descrptionPath = descrptionPath;
     }
 
     // Getters and setters
@@ -106,11 +103,11 @@ public class Game {
         this.translators = translators != null ? new ArrayList<>(translators) : new ArrayList<>();
     }
 
-    public String getSteamId() {
+    public Integer getSteamId() {
         return steamId;
     }
 
-    public void setSteamId(String steamId) {
+    public void setSteamId(Integer steamId) {
         this.steamId = steamId;
     }
 
@@ -120,22 +117,6 @@ public class Game {
 
     public void setReleaseYear(Integer releaseYear) {
         this.releaseYear = releaseYear;
-    }
-
-    public Double getPlaytime() {
-        return playtime;
-    }
-
-    public void setPlaytime(Double playtime) {
-        this.playtime = playtime;
-    }
-
-    public String getFormat() {
-        return format;
-    }
-
-    public void setFormat(String format) {
-        this.format = format;
     }
 
     public String getLanguage() {
@@ -168,5 +149,13 @@ public class Game {
 
     public void setCoverImagePath(String coverImagePath) {
         this.coverImagePath = coverImagePath;
+    }
+
+    public String getDescriptionPath() {
+        return descrptionPath;
+    }
+
+    public void setDescriptionPath(String descriptionPath) {
+        this.descrptionPath = descriptionPath;
     }
 }

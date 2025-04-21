@@ -2,6 +2,7 @@ plugins {
     id 'java'
     id 'application'
     id 'org.openjfx.javafxplugin' version '0.0.13'
+    id 'org.beryx.jlink' version '2.26.0'
 }
 
 repositories {
@@ -39,15 +40,6 @@ javafx {
     modules = ['javafx.controls', 'javafx.fxml', 'javafx.graphics'] 
 }
 
-task createRuntimeImage(type: Exec) {
-    description = 'Creates a custom runtime image using jlink'
-    group = 'build'
-    commandLine 'jlink',
-                '--module-path', sourceSets.main.runtimeClasspath.asPath,
-                '--add-modules', 'java.base,javafx.controls,javafx.fxml,javafx.graphics',
-                '--output', "$buildDir/customRuntime"
-}
-
 tasks.named('run') {
     doFirst {
         jvmArgs = [
@@ -57,8 +49,26 @@ tasks.named('run') {
     }
 }
 
-task printClasspath {
-    doLast {
-        println sourceSets.main.runtimeClasspath.asPath
+jlink {
+    imageName = 'GameCatalog'
+
+    launcher {
+        name = 'GameCatalog'
+        jvmArgs = ['--add-modules', 'javafx.controls,javafx.fxml']
+    }
+
+    options = ['--strip-debug', '--compress', '2', '--no-header-files', '--no-man-pages']
+
+    jpackage {
+        installerType = 'msi'
+        installerName = 'GameCatalogInstaller'
+        appVersion = project.version
+        vendor = 'Your Name'
+        installerOptions = [
+            '--win-per-user-install',
+            '--win-menu',
+            '--win-shortcut',
+            '--win-dir-chooser'
+        ]
     }
 }

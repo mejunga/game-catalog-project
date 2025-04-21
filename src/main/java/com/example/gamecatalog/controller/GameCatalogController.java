@@ -1,6 +1,9 @@
 package com.example.gamecatalog.controller;
 
 import java.io.IOException;
+import java.util.List;
+
+import com.example.gamecatalog.model.Game;
 
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -26,6 +29,9 @@ public class GameCatalogController
     private final int RESIZE_MARGIN = 7;
     private boolean isMaximized = false;
     private double prevX, prevY, prevWidth, prevHeight, dragOffsetX, dragOffsetY;
+    private int pageNumber = 1;
+    private static int maxPage = 1;
+    private List<Game> allGamesList;
 
     @FXML private AnchorPane base;
 
@@ -92,12 +98,32 @@ public class GameCatalogController
         stage.setIconified(true);
     }
 
+    @FXML private void handleFirstPage(){
+
+    }
+
+    @FXML private void handleLastPage(){
+
+    }
+
+    @FXML private void handleNextPage(){
+        
+    }
+
+    @FXML private void handlePreviousPage(){
+        
+    }
+
     public void setStage(Stage stage){
         this.stage = stage;
     }
 
     public FlowPane getFlowPane(){
         return game_card_flow;
+    }
+
+    public static int getMaxPage() {
+        return maxPage;
     }
 
     private Cursor getCursorForPosition(MouseEvent e){
@@ -205,8 +231,49 @@ public class GameCatalogController
             }
         }
     }
+
+    public static void render(List<Game> list, FlowPane flowPane, int page) {
+        maxPage = (int) Math.ceil((double) list.size() / 100);
+
+        new Renderer(list, flowPane, page).start();
+    }
+
+    private static class Renderer extends Thread {
+        private final List<Game> gameList;
+        private final FlowPane flowPane;
+        private final int pageNumber;
+
+        public Renderer(List<Game> list, FlowPane flowPane, int page) {
+            this.gameList = list;
+            this.flowPane = flowPane;
+            this.pageNumber = page;
+        }
+
+        @Override
+        public void run() {
+            for (int i = 0; i < 100; i++) {
+                int index = i + 100 * (pageNumber - 1);
+                if (index >= gameList.size()) break;
+
+                Game game = gameList.get(index);
+
+                try {
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/game-card-view.fxml"));
+                    Node card = loader.load();
+
+                    GameCardController controller = loader.getController();
+                    controller.setGameData(game.getTitle(), game.getPublisher() + " / " + game.getReleaseYear()
+                    );
+
+                    Platform.runLater(() -> flowPane.getChildren().add(card));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
     
-    public void initialize() {
+    public void initialize(){
         Platform.runLater(() -> {
             base.setOnMouseMoved(e -> {
                 base.setCursor(getCursorForPosition(e));
@@ -220,6 +287,8 @@ public class GameCatalogController
             base.setOnMouseDragged(e -> {
                 resizeWindow(e);
             });
+
+            render(allGamesList, game_card_flow, 1);
         });
 
         title_bar.setOnMousePressed(e -> {
@@ -235,21 +304,6 @@ public class GameCatalogController
                 stage.setX(e.getScreenX() - dragOffsetX);
                 stage.setY(e.getScreenY() - dragOffsetY);
             }
-        });
-
-        //To test if game cards appear in flowPane
-        for(int i = 0; i < 100; i++){
-            try {
-                FXMLLoader loader = new FXMLLoader();
-                loader.setLocation(getClass().getResource("/fxml/game-card-view.fxml"));
-                Node card = loader.load();
-                GameCardController controller = loader.getController();
-                controller.setGameData("title","XD / 1234");
-                Platform.runLater(() -> game_card_flow.getChildren().add(card));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+        });        
     }
 }
-
