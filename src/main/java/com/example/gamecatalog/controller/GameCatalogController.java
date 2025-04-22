@@ -49,6 +49,7 @@ public class GameCatalogController
     private String currentDeveloperFilter = null;
     private int[] currentYearRange = null;
     private String currentSort = null;
+    private String currentSearchTerm = null;
     private GameRepository gameRepository;
 
     @FXML private AnchorPane base;
@@ -511,6 +512,9 @@ public class GameCatalogController
         // Initialize the page number field
         page_number.setText(String.valueOf(pageNumber));
 
+        // Setup search field
+        setupSearchField();
+
         // Store this controller in the scene's user data for access from other classes
         Platform.runLater(() -> {
             if (stage != null && stage.getScene() != null) {
@@ -827,15 +831,92 @@ public class GameCatalogController
     }
 
     /**
+     * Sets up the search field with event handlers
+     */
+    private void setupSearchField() {
+        // Handle Enter key press
+        search_field.setOnAction(e -> {
+            currentSearchTerm = search_field.getText();
+            applyFilters();
+        });
+
+        // Add a listener for text changes with a small delay
+        search_field.textProperty().addListener((observable, oldValue, newValue) -> {
+            // Cancel any previous timer
+            if (searchTimer != null) {
+                searchTimer.cancel();
+                searchTimer = null;
+            }
+
+            // Set up a new timer to delay the search until typing stops
+            searchTimer = new java.util.Timer();
+            searchTimer.schedule(new java.util.TimerTask() {
+                @Override
+                public void run() {
+                    Platform.runLater(() -> {
+                        currentSearchTerm = newValue;
+                        applyFilters();
+                    });
+                }
+            }, 300); // 300ms delay
+        });
+
+        // Add a placeholder text
+        search_field.setPromptText("Search by title...");
+
+        // Check if there's a parent container that we can add a button to
+        if (search_field.getParent() instanceof AnchorPane) {
+            AnchorPane parent = (AnchorPane) search_field.getParent();
+
+            // Create a clear button
+            Button clearButton = new Button("✕");
+            clearButton.setStyle("-fx-font-size: 8pt; -fx-padding: 2 5 2 5;");
+            clearButton.setOnAction(e -> {
+                search_field.clear();
+                currentSearchTerm = null;
+                applyFilters();
+            });
+
+            // Position the button next to the search field
+            double buttonX = search_field.getLayoutX() + search_field.getPrefWidth() - 20;
+            double buttonY = search_field.getLayoutY() + 5;
+            clearButton.setLayoutX(buttonX);
+            clearButton.setLayoutY(buttonY);
+
+            // Add the button to the parent
+            parent.getChildren().add(clearButton);
+        }
+    }
+
+    private java.util.Timer searchTimer;
+
+    /**
      * Applies all active filters to the game list
      */
     private void applyFilters() {
         // Start with all games
         filteredGamesList = gameRepository.getAllGames();
 
+        // Apply search term if active
+        if (currentSearchTerm != null && !currentSearchTerm.trim().isEmpty()) {
+            filteredGamesList = gameRepository.searchGamesByTitle(currentSearchTerm);
+        }
+
         // Apply genre filter if active
         if (currentGenreFilter != null && !currentGenreFilter.isEmpty()) {
-            filteredGamesList = gameRepository.getGamesByGenre(currentGenreFilter);
+            // If search was already applied, we need to filter the search results
+            if (currentSearchTerm != null && !currentSearchTerm.trim().isEmpty()) {
+                List<Game> genreFilteredGames = new ArrayList<>();
+                for (Game game : filteredGamesList) {
+                    if (game.getGenres() != null && game.getGenres().contains(currentGenreFilter)) {
+                        genreFilteredGames.add(game);
+                    }
+                }
+                filteredGamesList = genreFilteredGames;
+            } else {
+                // No search was applied, use the repository method
+                filteredGamesList = gameRepository.getGamesByGenre(currentGenreFilter);
+            }
         }
 
         // Apply platform filter if active

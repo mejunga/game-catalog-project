@@ -810,4 +810,29 @@ public class GameRepository {
         });
         return sortedGames;
     }
+
+    /**
+     * Searches for games with titles containing the search term (case-insensitive).
+     *
+     * @param searchTerm the term to search for in game titles
+     * @return a list of games with titles containing the search term
+     */
+    public List<Game> searchGamesByTitle(String searchTerm) {
+        if (searchTerm == null || searchTerm.trim().isEmpty()) {
+            return new ArrayList<>(games); // Return all games if search term is empty
+        }
+
+        // Convert search term to lowercase for case-insensitive search
+        String lowerCaseSearchTerm = searchTerm.toLowerCase().trim();
+
+        List<Game> searchResults = new ArrayList<>();
+        for (Game game : games) {
+            String title = game.getTitle();
+            if (title != null && title.toLowerCase().contains(lowerCaseSearchTerm)) {
+                searchResults.add(game);
+            }
+        }
+
+        return searchResults;
+    }
 }
