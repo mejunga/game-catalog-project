@@ -2,6 +2,7 @@ package com.example.gamecatalog.controller;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.ArrayList;
 
 import com.example.gamecatalog.model.Game;
 import com.example.gamecatalog.repository.GameRepository;
@@ -29,7 +30,7 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
-public class GameCatalogController 
+public class GameCatalogController
 {
     private Stage stage;
     private double xOffset = 0;
@@ -43,6 +44,8 @@ public class GameCatalogController
     private GameRepository gameRepository;
     private List<Game> filteredGamesList;
     private String currentGenreFilter = null;
+    private String currentPlatformFilter = null;
+    private String currentTagFilter = null;
 
     @FXML private AnchorPane base;
 
@@ -52,7 +55,7 @@ public class GameCatalogController
     @FXML private Button close;
     @FXML private MenuButton file_menu;
     @FXML private Button help;
-    
+
     @FXML private Button show_all;
     @FXML private Button show_favorites;
     @FXML private MenuButton sort_menu;
@@ -118,29 +121,29 @@ public class GameCatalogController
     }
 
     @FXML private void handleNextPage(){
-        
+
     }
 
     @FXML private void handlePreviousPage(){
-        
+
     }
 
     @FXML private void handleAddGame() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/add-game-form.fxml"));
             Parent root = loader.load();
-            
+
             AddGameController controller = loader.getController();
-            
+
             Stage addGameStage = new Stage();
             addGameStage.initModality(Modality.APPLICATION_MODAL);
             addGameStage.initStyle(StageStyle.UNDECORATED);
             addGameStage.setScene(new Scene(root));
-            
+
             controller.setStage(addGameStage);
-            
+
             addGameStage.showAndWait();
-            
+
             // Force a full refresh of the game list
             forceRefreshGameList();
         } catch (IOException e) {
@@ -155,27 +158,27 @@ public class GameCatalogController
     private void forceRefreshGameList() {
         // Clear existing items first
         Platform.runLater(() -> game_card_flow.getChildren().clear());
-        
+
         // Create a new repository instance and reload games
         GameRepository gameRepository = new GameRepository();
         allGamesList = gameRepository.getAllGames();
-        
+
         // Wait a moment to ensure file system operations complete
         try {
             Thread.sleep(100);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }
-        
+
         // Rebuild the flow pane
         new Thread(() -> {
             Platform.runLater(() -> {
                 // Clear again just to be safe
                 game_card_flow.getChildren().clear();
-                
+
                 // Render games
                 render(allGamesList, game_card_flow, pageNumber);
-                
+
                 // Update page number display
                 page_number.setText(String.valueOf(pageNumber));
             });
@@ -196,10 +199,10 @@ public class GameCatalogController
 
     public static void render(List<Game> list, FlowPane flowPane, int page) {
         maxPage = (int) Math.ceil((double) list.size() / 100);
-        
+
         // Clear the existing flow pane items
         Platform.runLater(() -> flowPane.getChildren().clear());
-        
+
         new Renderer(list, flowPane, page).start();
     }
 
@@ -221,13 +224,13 @@ public class GameCatalogController
 
         Point2D topLeft = base.localToScreen(0, 0);
         Point2D bottomRight = base.localToScreen(base.getWidth(), base.getHeight());
-    
+
         double leftX = topLeft.getX();
         double rightX = bottomRight.getX();
 
         double topY = topLeft.getY();
         double bottomY = bottomRight.getY();
-    
+
         if(!isMaximized){
             if (Math.abs(mouseX - leftX) <= RESIZE_MARGIN) {
                 if (Math.abs(mouseY - topY) <= RESIZE_MARGIN) {
@@ -237,7 +240,7 @@ public class GameCatalogController
                 }
                 return Cursor.W_RESIZE;
             }
-        
+
             if (Math.abs(mouseX - rightX) <= RESIZE_MARGIN) {
                 if (Math.abs(mouseY - topY) <= RESIZE_MARGIN) {
                     return Cursor.NE_RESIZE;
@@ -246,11 +249,11 @@ public class GameCatalogController
                 }
                 return Cursor.E_RESIZE;
             }
-        
+
             if (Math.abs(mouseY - topY) <= RESIZE_MARGIN - 1) {
                 return Cursor.N_RESIZE;
             }
-        
+
             if (Math.abs(mouseY - bottomY) <= RESIZE_MARGIN) {
                 return Cursor.S_RESIZE;
             }
@@ -261,14 +264,14 @@ public class GameCatalogController
 
     private void resizeWindow(MouseEvent e) {
         if (stage == null) return;
-    
+
         double mouseX = e.getScreenX();
         double mouseY = e.getScreenY();
         double stageX = stage.getX();
         double stageY = stage.getY();
         double stageWidth = stage.getWidth();
         double stageHeight = stage.getHeight();
-    
+
         Cursor cursor = base.getCursor();
         if(!isMaximized){
             if (cursor == Cursor.NW_RESIZE) {
@@ -348,21 +351,21 @@ public class GameCatalogController
                     Node card = loader.load();
 
                     GameCardController controller = loader.getController();
-                    
+
                     // Pass the cover image path if available
                     if (game.getCoverImagePath() != null && !game.getCoverImagePath().isEmpty()) {
                         controller.setGameData(
-                            game.getTitle(), 
-                            game.getPublisher() + " / " + game.getReleaseYear(),
-                            game.getCoverImagePath()
+                                game.getTitle(),
+                                game.getPublisher() + " / " + game.getReleaseYear(),
+                                game.getCoverImagePath()
                         );
                     } else {
                         controller.setGameData(
-                            game.getTitle(), 
-                            game.getPublisher() + " / " + game.getReleaseYear()
+                                game.getTitle(),
+                                game.getPublisher() + " / " + game.getReleaseYear()
                         );
                     }
-                    
+
                     // Set up the context menu actions
                     controller.setOnUpdateGame(() -> handleUpdateGame(gameIndex, game));
                     controller.setOnRemoveGame(() -> handleRemoveGame(gameIndex, game));
@@ -374,24 +377,24 @@ public class GameCatalogController
                 }
             }
         }
-        
+
         private void handleUpdateGame(int index, Game game) {
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/add-game-form.fxml"));
                 Parent root = loader.load();
-                
+
                 AddGameController controller = loader.getController();
                 controller.setForUpdate(game, index);
-                
+
                 Stage updateGameStage = new Stage();
                 updateGameStage.initModality(Modality.APPLICATION_MODAL);
                 updateGameStage.initStyle(StageStyle.UNDECORATED);
                 updateGameStage.setScene(new Scene(root));
-                
+
                 controller.setStage(updateGameStage);
-                
+
                 updateGameStage.showAndWait();
-                
+
                 // Refresh game list after update
                 Platform.runLater(() -> {
                     GameCatalogController mainController = getGameCatalogController();
@@ -404,38 +407,38 @@ public class GameCatalogController
                 showAlert("Error", "Failed to open update form: " + e.getMessage());
             }
         }
-        
+
         private void handleRemoveGame(int index, Game game) {
             Alert alert = new Alert(AlertType.CONFIRMATION);
             alert.setTitle("Remove Game");
             alert.setHeaderText("Remove " + game.getTitle());
             alert.setContentText("Are you sure you want to remove this game from your catalog?");
-            
+
             if (alert.showAndWait().get() == ButtonType.OK) {
                 // Create a new repository instance to ensure fresh data
                 GameRepository gameRepository = new GameRepository();
-                
+
                 // Find the game by title and other properties since the index might be wrong
                 List<Game> allGames = gameRepository.getAllGames();
                 int correctIndex = -1;
-                
+
                 // Find the game by matching title, publisher and developer
                 for (int i = 0; i < allGames.size(); i++) {
                     Game g = allGames.get(i);
                     if (g.getTitle().equals(game.getTitle()) &&
-                        g.getPublisher().equals(game.getPublisher()) &&
-                        g.getDeveloper().equals(game.getDeveloper())) {
+                            g.getPublisher().equals(game.getPublisher()) &&
+                            g.getDeveloper().equals(game.getDeveloper())) {
                         correctIndex = i;
                         break;
                     }
                 }
-                
+
                 if (correctIndex >= 0 && gameRepository.removeGame(correctIndex)) {
                     // Save changes to the JSON file
                     boolean saved = gameRepository.saveGames();
                     if (saved) {
                         showAlert("Success", "Game removed successfully");
-                        
+
                         // Refresh game list after removal
                         Platform.runLater(() -> {
                             GameCatalogController mainController = getGameCatalogController();
@@ -451,23 +454,23 @@ public class GameCatalogController
                 }
             }
         }
-        
+
         private void handleAddToFavorite(Game game) {
             // Set the favorite flag in the game object
             List<String> tags = game.getTags();
             if (!tags.contains("Favorite")) {
                 tags.add("Favorite");
                 game.setTags(tags);
-                
+
                 // Save the updated game
                 gameRepository.saveGames();
-                
+
                 showAlert("Success", game.getTitle() + " added to favorites!");
             } else {
                 showAlert("Info", game.getTitle() + " is already in favorites.");
             }
         }
-        
+
         private void showAlert(String title, String message) {
             Platform.runLater(() -> {
                 Alert alert = new Alert(AlertType.INFORMATION);
@@ -477,7 +480,7 @@ public class GameCatalogController
                 alert.showAndWait();
             });
         }
-        
+
         private GameCatalogController getGameCatalogController() {
             // This is a simplified approach - in a real app you would use a proper
             // reference to the main controller via dependency injection or similar
@@ -496,35 +499,35 @@ public class GameCatalogController
             return null;
         }
     }
-    
+
     public void initialize(){
         // Load games from repository
         refreshGameList();
-        
+
         // Initialize the page number field
         page_number.setText(String.valueOf(pageNumber));
-        
+
         // Initialize repository and filters
         if (gameRepository == null) {
             gameRepository = new GameRepository();
         }
         setupFilters();
-        
+
         // Store this controller in the scene's user data for access from other classes
         Platform.runLater(() -> {
             if (stage != null && stage.getScene() != null) {
                 stage.getScene().setUserData(this);
             }
-            
+
             base.setOnMouseMoved(e -> {
                 base.setCursor(getCursorForPosition(e));
             });
-    
+
             base.setOnMousePressed(e -> {
                 xOffset = e.getSceneX();
                 yOffset = e.getSceneY();
             });
-    
+
             base.setOnMouseDragged(e -> {
                 resizeWindow(e);
             });
@@ -537,35 +540,40 @@ public class GameCatalogController
                 dragOffsetY = e.getSceneY();
             }
         });
-    
+
         title_bar.setOnMouseDragged(e -> {
             if(stage != null && !isMaximized) {
                 stage.setX(e.getScreenX() - dragOffsetX);
                 stage.setY(e.getScreenY() - dragOffsetY);
             }
-        });        
+        });
 
         setupFilters();
     }
-    
+
     /**
      * Sets up the filter UI components with data from the repository
      */
     private void setupFilters() {
         // Setup genre filter
         setupGenreFilter();
-        
-        // Setup other filters (can be implemented similarly)
+
+        // Setup platform filter
+        setupPlatformFilter();
+
+        // Setup tags filter
+        setupTagsFilter();
+
         // TODO: Implement other filters
     }
-    
+
     /**
      * Sets up the genre filter MenuButton with items from the repository
      */
     private void setupGenreFilter() {
         // Clear existing items
         genre_filter.getItems().clear();
-        
+
         // Add "All Genres" option
         javafx.scene.control.MenuItem allGenresItem = new javafx.scene.control.MenuItem("All Genres");
         allGenresItem.setOnAction(e -> {
@@ -574,10 +582,10 @@ public class GameCatalogController
             applyFilters();
         });
         genre_filter.getItems().add(allGenresItem);
-        
+
         // Get all unique genres from the repository
         List<String> genres = gameRepository.getAllGenres();
-        
+
         // Add each genre as a menu item
         for (String genre : genres) {
             javafx.scene.control.MenuItem item = new javafx.scene.control.MenuItem(genre);
@@ -589,25 +597,108 @@ public class GameCatalogController
             genre_filter.getItems().add(item);
         }
     }
-    
+
+    /**
+     * Sets up the platform filter MenuButton with items from the repository
+     */
+    private void setupPlatformFilter() {
+        // Clear existing items
+        platform_filter.getItems().clear();
+
+        // Add "All Platforms" option
+        javafx.scene.control.MenuItem allPlatformsItem = new javafx.scene.control.MenuItem("All Platforms");
+        allPlatformsItem.setOnAction(e -> {
+            platform_filter.setText("Platform");
+            currentPlatformFilter = null;
+            applyFilters();
+        });
+        platform_filter.getItems().add(allPlatformsItem);
+
+        // Get all unique platforms from the repository
+        List<String> platforms = gameRepository.getAllPlatforms();
+
+        // Add each platform as a menu item
+        for (String platform : platforms) {
+            javafx.scene.control.MenuItem item = new javafx.scene.control.MenuItem(platform);
+            item.setOnAction(e -> {
+                platform_filter.setText(platform);
+                currentPlatformFilter = platform;
+                applyFilters();
+            });
+            platform_filter.getItems().add(item);
+        }
+    }
+
+    /**
+     * Sets up the tags filter MenuButton with items from the repository
+     */
+    private void setupTagsFilter() {
+        // Clear existing items
+        tags_filter.getItems().clear();
+
+        // Add "All Tags" option
+        javafx.scene.control.MenuItem allTagsItem = new javafx.scene.control.MenuItem("All Tags");
+        allTagsItem.setOnAction(e -> {
+            tags_filter.setText("Tags");
+            currentTagFilter = null;
+            applyFilters();
+        });
+        tags_filter.getItems().add(allTagsItem);
+
+        // Get all unique tags from the repository
+        List<String> tags = gameRepository.getAllTags();
+
+        // Add each tag as a menu item
+        for (String tag : tags) {
+            javafx.scene.control.MenuItem item = new javafx.scene.control.MenuItem(tag);
+            item.setOnAction(e -> {
+                tags_filter.setText(tag);
+                currentTagFilter = tag;
+                applyFilters();
+            });
+            tags_filter.getItems().add(item);
+        }
+    }
+
     /**
      * Applies all active filters to the game list
      */
     private void applyFilters() {
         // Start with all games
         filteredGamesList = gameRepository.getAllGames();
-        
+
         // Apply genre filter if active
         if (currentGenreFilter != null && !currentGenreFilter.isEmpty()) {
             filteredGamesList = gameRepository.getGamesByGenre(currentGenreFilter);
         }
-        
-        // Apply other filters here as needed
-        // TODO: Implement other filters
-        
+
+        // Apply platform filter if active
+        if (currentPlatformFilter != null && !currentPlatformFilter.isEmpty()) {
+            // We need to further filter the already filtered list
+            List<Game> platformFilteredGames = new ArrayList<>();
+            for (Game game : filteredGamesList) {
+                if (game.getPlatforms() != null && game.getPlatforms().contains(currentPlatformFilter)) {
+                    platformFilteredGames.add(game);
+                }
+            }
+            filteredGamesList = platformFilteredGames;
+        }
+
+        // Apply tag filter if active
+        if (currentTagFilter != null && !currentTagFilter.isEmpty()) {
+            // We need to further filter the already filtered list
+            List<Game> tagFilteredGames = new ArrayList<>();
+            for (Game game : filteredGamesList) {
+                if (game.getTags() != null && game.getTags().contains(currentTagFilter)) {
+                    tagFilteredGames.add(game);
+                }
+            }
+            filteredGamesList = tagFilteredGames;
+        }
+
         // Reset to page 1 when filters change
         pageNumber = 1;
-        
+
         // Update the UI
         render(filteredGamesList, game_card_flow, pageNumber);
         page_number.setText(String.valueOf(pageNumber));
