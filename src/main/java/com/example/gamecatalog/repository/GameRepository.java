@@ -770,4 +770,44 @@ public class GameRepository {
         });
         return sortedGames;
     }
+
+    /**
+     * Gets all games sorted by release year in ascending order (oldest first).
+     *
+     * @return a list of games sorted by release year in ascending order
+     */
+    public List<Game> getGamesSortedByYearAsc() {
+        List<Game> sortedGames = new ArrayList<>(games);
+        sortedGames.sort((g1, g2) -> {
+            if (g1.getReleaseYear() == null && g2.getReleaseYear() == null) {
+                return 0;
+            } else if (g1.getReleaseYear() == null) {
+                return -1;
+            } else if (g2.getReleaseYear() == null) {
+                return 1;
+            }
+            return g1.getReleaseYear().compareTo(g2.getReleaseYear());
+        });
+        return sortedGames;
+    }
+
+    /**
+     * Gets all games sorted by release year in descending order (newest first).
+     *
+     * @return a list of games sorted by release year in descending order
+     */
+    public List<Game> getGamesSortedByYearDesc() {
+        List<Game> sortedGames = new ArrayList<>(games);
+        sortedGames.sort((g1, g2) -> {
+            if (g1.getReleaseYear() == null && g2.getReleaseYear() == null) {
+                return 0;
+            } else if (g1.getReleaseYear() == null) {
+                return 1;
+            } else if (g2.getReleaseYear() == null) {
+                return -1;
+            }
+            return g2.getReleaseYear().compareTo(g1.getReleaseYear());
+        });
+        return sortedGames;
+    }
 }

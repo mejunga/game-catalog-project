@@ -806,6 +806,24 @@ public class GameCatalogController
             applyFilters();
         });
         sort_menu.getItems().add(titleDescItem);
+
+        // Add year (oldest to newest) sort option
+        javafx.scene.control.MenuItem yearAscItem = new javafx.scene.control.MenuItem("Year (Oldest-Newest)");
+        yearAscItem.setOnAction(e -> {
+            sort_menu.setText("Year (Oldest-Newest)");
+            currentSort = "year_asc";
+            applyFilters();
+        });
+        sort_menu.getItems().add(yearAscItem);
+
+        // Add year (newest to oldest) sort option
+        javafx.scene.control.MenuItem yearDescItem = new javafx.scene.control.MenuItem("Year (Newest-Oldest)");
+        yearDescItem.setOnAction(e -> {
+            sort_menu.setText("Year (Newest-Oldest)");
+            currentSort = "year_desc";
+            applyFilters();
+        });
+        sort_menu.getItems().add(yearDescItem);
     }
 
     /**
@@ -895,6 +913,16 @@ public class GameCatalogController
                 applyFiltersToSortedList();
             } else if ("title_desc".equals(currentSort)) {
                 filteredGamesList = gameRepository.getGamesSortedByTitleDesc();
+
+                // We need to reapply any filters to the sorted list
+                applyFiltersToSortedList();
+            } else if ("year_asc".equals(currentSort)) {
+                filteredGamesList = gameRepository.getGamesSortedByYearAsc();
+
+                // We need to reapply any filters to the sorted list
+                applyFiltersToSortedList();
+            } else if ("year_desc".equals(currentSort)) {
+                filteredGamesList = gameRepository.getGamesSortedByYearDesc();
 
                 // We need to reapply any filters to the sorted list
                 applyFiltersToSortedList();
