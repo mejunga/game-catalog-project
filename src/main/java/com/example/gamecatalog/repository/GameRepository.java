@@ -432,4 +432,53 @@ public class GameRepository {
     public int getGameCount() {
         return games.size();
     }
+    
+    /**
+     * Gets all unique genres from the games in the repository.
+     * 
+     * @return a list of unique genres
+     */
+    public List<String> getAllGenres() {
+        List<String> allGenres = new ArrayList<>();
+        
+        // Collect all genres from all games
+        for (Game game : games) {
+            List<String> genres = game.getGenres();
+            if (genres != null) {
+                for (String genre : genres) {
+                    if (!allGenres.contains(genre)) {
+                        allGenres.add(genre);
+                    }
+                }
+            }
+        }
+        
+        // Sort alphabetically for better user experience
+        allGenres.sort(String::compareToIgnoreCase);
+        
+        return allGenres;
+    }
+    
+    /**
+     * Gets all games that have the specified genre.
+     * 
+     * @param genre the genre to filter by
+     * @return a list of games with the specified genre
+     */
+    public List<Game> getGamesByGenre(String genre) {
+        if (genre == null || genre.isEmpty()) {
+            return new ArrayList<>(games); // Return all games if no genre specified
+        }
+        
+        List<Game> filteredGames = new ArrayList<>();
+        
+        for (Game game : games) {
+            List<String> genres = game.getGenres();
+            if (genres != null && genres.contains(genre)) {
+                filteredGames.add(game);
+            }
+        }
+        
+        return filteredGames;
+    }
 }

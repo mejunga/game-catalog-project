@@ -40,6 +40,9 @@ public class GameCatalogController
     private int pageNumber = 1;
     private static int maxPage = 1;
     private List<Game> allGamesList;
+    private GameRepository gameRepository;
+    private List<Game> filteredGamesList;
+    private String currentGenreFilter = null;
 
     @FXML private AnchorPane base;
 
@@ -183,9 +186,12 @@ public class GameCatalogController
      * Refreshes the game list by loading games from repository.
      */
     private void refreshGameList() {
-        GameRepository gameRepository = new GameRepository();
+        if (gameRepository == null) {
+            gameRepository = new GameRepository();
+        }
         allGamesList = gameRepository.getAllGames();
-        render(allGamesList, game_card_flow, pageNumber);
+        filteredGamesList = allGamesList; // Initialize filtered list with all games
+        render(filteredGamesList, game_card_flow, pageNumber);
     }
 
     public static void render(List<Game> list, FlowPane flowPane, int page) {
@@ -498,6 +504,12 @@ public class GameCatalogController
         // Initialize the page number field
         page_number.setText(String.valueOf(pageNumber));
         
+        // Initialize repository and filters
+        if (gameRepository == null) {
+            gameRepository = new GameRepository();
+        }
+        setupFilters();
+        
         // Store this controller in the scene's user data for access from other classes
         Platform.runLater(() -> {
             if (stage != null && stage.getScene() != null) {
@@ -532,5 +544,72 @@ public class GameCatalogController
                 stage.setY(e.getScreenY() - dragOffsetY);
             }
         });        
+
+        setupFilters();
+    }
+    
+    /**
+     * Sets up the filter UI components with data from the repository
+     */
+    private void setupFilters() {
+        // Setup genre filter
+        setupGenreFilter();
+        
+        // Setup other filters (can be implemented similarly)
+        // TODO: Implement other filters
+    }
+    
+    /**
+     * Sets up the genre filter MenuButton with items from the repository
+     */
+    private void setupGenreFilter() {
+        // Clear existing items
+        genre_filter.getItems().clear();
+        
+        // Add "All Genres" option
+        javafx.scene.control.MenuItem allGenresItem = new javafx.scene.control.MenuItem("All Genres");
+        allGenresItem.setOnAction(e -> {
+            genre_filter.setText("Genre");
+            currentGenreFilter = null;
+            applyFilters();
+        });
+        genre_filter.getItems().add(allGenresItem);
+        
+        // Get all unique genres from the repository
+        List<String> genres = gameRepository.getAllGenres();
+        
+        // Add each genre as a menu item
+        for (String genre : genres) {
+            javafx.scene.control.MenuItem item = new javafx.scene.control.MenuItem(genre);
+            item.setOnAction(e -> {
+                genre_filter.setText(genre);
+                currentGenreFilter = genre;
+                applyFilters();
+            });
+            genre_filter.getItems().add(item);
+        }
+    }
+    
+    /**
+     * Applies all active filters to the game list
+     */
+    private void applyFilters() {
+        // Start with all games
+        filteredGamesList = gameRepository.getAllGames();
+        
+        // Apply genre filter if active
+        if (currentGenreFilter != null && !currentGenreFilter.isEmpty()) {
+            filteredGamesList = gameRepository.getGamesByGenre(currentGenreFilter);
+        }
+        
+        // Apply other filters here as needed
+        // TODO: Implement other filters
+        
+        // Reset to page 1 when filters change
+        pageNumber = 1;
+        
+        // Update the UI
+        render(filteredGamesList, game_card_flow, pageNumber);
+        page_number.setText(String.valueOf(pageNumber));
     }
 }
