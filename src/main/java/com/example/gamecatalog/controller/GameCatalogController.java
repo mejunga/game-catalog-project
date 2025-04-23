@@ -3,6 +3,11 @@ package com.example.gamecatalog.controller;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 
 import com.example.gamecatalog.model.Game;
 import com.example.gamecatalog.repository.GameRepository;
@@ -21,10 +26,12 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.MenuButton;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
+import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
@@ -552,6 +559,9 @@ public class GameCatalogController
 
         // Setup filters
         setupFilters();
+
+        // Setup file menu items
+        setupFileMenu();
     }
 
     /**
@@ -1066,5 +1076,116 @@ public class GameCatalogController
                 return releaseYear == null || releaseYear < startYear || releaseYear > endYear;
             });
         }
+    }
+
+    /**
+     * Handles importing a JSON file to replace the current games_all.json file.
+     * Opens a file chooser dialog for the user to select a JSON file, then
+     * copies it to the data folder as games_all.json and refreshes the game list.
+     */
+    private void handleImportJSON() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Import JSON File");
+        fileChooser.getExtensionFilters().add(
+                new FileChooser.ExtensionFilter("JSON Files", "*.json")
+        );
+
+        File selectedFile = fileChooser.showOpenDialog(stage);
+        if (selectedFile != null) {
+            try {
+                // Make sure the data directory exists
+                File dataDir = new File("data");
+                if (!dataDir.exists()) {
+                    dataDir.mkdirs();
+                }
+
+                // Copy the selected file to the data directory
+                Path source = selectedFile.toPath();
+                Path target = Paths.get("data/games_all.json");
+                Files.copy(source, target, StandardCopyOption.REPLACE_EXISTING);
+
+                // Show success message
+                Alert alert = new Alert(AlertType.INFORMATION);
+                alert.setTitle("Import Successful");
+                alert.setHeaderText(null);
+                alert.setContentText("JSON file successfully imported!");
+                alert.showAndWait();
+
+                // Force a refresh of the game list
+                forceRefreshGameList();
+            } catch (IOException e) {
+                // Show error message if the import fails
+                Alert alert = new Alert(AlertType.ERROR);
+                alert.setTitle("Import Failed");
+                alert.setHeaderText(null);
+                alert.setContentText("Failed to import JSON file: " + e.getMessage());
+                alert.showAndWait();
+                e.printStackTrace();
+            }
+        }
+    }
+
+    /**
+     * Handles exporting the games_all.json file to a location selected by the user.
+     * Opens a file chooser dialog for the user to select where to save the file.
+     */
+    private void handleExportJSON() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Export JSON File");
+        fileChooser.setInitialFileName("games_all.json");
+        fileChooser.getExtensionFilters().add(
+                new FileChooser.ExtensionFilter("JSON Files", "*.json")
+        );
+
+        File selectedFile = fileChooser.showSaveDialog(stage);
+        if (selectedFile != null) {
+            try {
+                // Source file path
+                Path source = Paths.get("data/games_all.json");
+
+                // Make sure the source file exists
+                if (!Files.exists(source)) {
+                    throw new IOException("Source file games_all.json not found in data directory.");
+                }
+
+                // Copy to the selected destination
+                Path target = selectedFile.toPath();
+                Files.copy(source, target, StandardCopyOption.REPLACE_EXISTING);
+
+                // Show success message
+                Alert alert = new Alert(AlertType.INFORMATION);
+                alert.setTitle("Export Successful");
+                alert.setHeaderText(null);
+                alert.setContentText("JSON file successfully exported to: " + selectedFile.getAbsolutePath());
+                alert.showAndWait();
+            } catch (IOException e) {
+                // Show error message if the export fails
+                Alert alert = new Alert(AlertType.ERROR);
+                alert.setTitle("Export Failed");
+                alert.setHeaderText(null);
+                alert.setContentText("Failed to export JSON file: " + e.getMessage());
+                alert.showAndWait();
+                e.printStackTrace();
+            }
+        }
+    }
+
+    /**
+     * Sets up the file menu with import and export functionality.
+     */
+    private void setupFileMenu() {
+        // Clear existing items
+        file_menu.getItems().clear();
+
+        // Create import JSON menu item
+        MenuItem importJSON = new MenuItem("Import JSON File");
+        importJSON.setOnAction(e -> handleImportJSON());
+
+        // Create export JSON menu item
+        MenuItem exportJSON = new MenuItem("Export JSON File");
+        exportJSON.setOnAction(e -> handleExportJSON());
+
+        // Add items to the menu
+        file_menu.getItems().addAll(importJSON, exportJSON);
     }
 }
