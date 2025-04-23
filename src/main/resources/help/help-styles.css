@@ -1,0 +1,76 @@
+/* GameMage Help Documentation Styles */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    color: #333;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f5f5f5;
+}
+
+.header {
+    background-color: #111111;
+    color: white;
+    padding: 20px;
+    text-align: center;
+    border-radius: 5px;
+    margin-bottom: 30px;
+}
+
+h1 {
+    margin: 0;
+}
+
+h2 {
+    color: #2D72D2;
+    border-bottom: 2px solid #2D72D2;
+    padding-bottom: 5px;
+    margin-top: 30px;
+}
+
+h3 {
+    color: #333;
+    margin-top: 20px;
+}
+
+.section {
+    background-color: white;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.button-desc {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.button-name {
+    font-weight: bold;
+    min-width: 150px;
+}
+
+.shortcut {
+    background-color: #f0f0f0;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-family: monospace;
+    margin-left: 10px;
+}
+
+img {
+    max-width: 100%;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin: 15px 0;
+}
+
+.note {
+    background-color: #e7f3fe;
+    border-left: 5px solid #2196F3;
+    padding: 15px;
+    margin: 15px 0;
+} 

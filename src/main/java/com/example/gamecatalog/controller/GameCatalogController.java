@@ -11,6 +11,7 @@ import java.nio.file.StandardCopyOption;
 
 import com.example.gamecatalog.model.Game;
 import com.example.gamecatalog.repository.GameRepository;
+import com.example.gamecatalog.util.HelpManager;
 
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -161,6 +162,18 @@ public class GameCatalogController
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    @FXML private void handleHelp() {
+        HelpManager.showHelpDocument();
+    }
+
+    @FXML private void handleShowFavorites() {
+        Alert alert = new Alert(AlertType.INFORMATION);
+        alert.setTitle("Coming Soon");
+        alert.setHeaderText(null);
+        alert.setContentText("This feature is not ready but stay tuned! We are Preparing!");
+        alert.showAndWait();
     }
 
     /**
@@ -562,6 +575,12 @@ public class GameCatalogController
 
         // Setup file menu items
         setupFileMenu();
+
+        // Add event handler for help button
+        help.setOnAction(event -> handleHelp());
+
+        // Add event handler for favorites button
+        show_favorites.setOnAction(event -> handleShowFavorites());
     }
 
     /**

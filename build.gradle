@@ -13,6 +13,7 @@ dependencies {
     implementation 'org.openjfx:javafx-controls:21'
     implementation 'org.openjfx:javafx-fxml:21'
     implementation 'org.openjfx:javafx-graphics:21'
+    implementation 'org.openjfx:javafx-web:21'
     testImplementation 'junit:junit:4.13.2'
 }
 
@@ -37,14 +38,14 @@ sourceSets {
 
 javafx {
     version = "21"
-    modules = ['javafx.controls', 'javafx.fxml', 'javafx.graphics'] 
+    modules = ['javafx.controls', 'javafx.fxml', 'javafx.graphics', 'javafx.web'] 
 }
 
 tasks.named('run') {
     doFirst {
         jvmArgs = [
             "--module-path", classpath.asPath, 
-            "--add-modules", "javafx.controls,javafx.fxml"
+            "--add-modules", "javafx.controls,javafx.fxml,javafx.web"
         ]
     }
 }
@@ -54,7 +55,7 @@ jlink {
 
     launcher {
         name = 'GameCatalog'
-        jvmArgs = ['--add-modules', 'javafx.controls,javafx.fxml']
+        jvmArgs = ['--add-modules', 'javafx.controls,javafx.fxml,javafx.web']
     }
 
     options = ['--strip-debug', '--compress', '2', '--no-header-files', '--no-man-pages']
