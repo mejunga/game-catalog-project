@@ -185,7 +185,7 @@ public class GameCatalogController
         Platform.runLater(() -> game_card_flow.getChildren().clear());
 
         // Create a new repository instance and reload games
-        GameRepository gameRepository = new GameRepository();
+        this.gameRepository = new GameRepository();
         allGamesList = gameRepository.getAllGames();
 
         // Wait a moment to ensure file system operations complete
@@ -465,6 +465,8 @@ public class GameCatalogController
                         Platform.runLater(() -> {
                             GameCatalogController mainController = getGameCatalogController();
                             if (mainController != null) {
+                                // Update the main controller's repository with this one
+                                // to ensure the in-memory list is also updated
                                 mainController.forceRefreshGameList();
                             }
                         });
