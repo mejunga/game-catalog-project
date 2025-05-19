@@ -13,52 +13,57 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="base" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="660.0" prefWidth="1110.0" style="-fx-background-color: rgba(0, 0, 0, 0.01);" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.gamecatalog.controller.GameCatalogController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="660.0" prefWidth="1110.0" style="-fx-background-color: rgba(0, 0, 0, 0.01);" stylesheets="@styles/game-catalog.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.gamecatalog.controller.GameCatalogController">
    <children>
-      <AnchorPane AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
+      <AnchorPane fx:id="base" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
          <children>
             <BorderPane prefHeight="650.0" prefWidth="1100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <top>
-                  <AnchorPane prefHeight="100.0" prefWidth="1100.0" style="-fx-background-color: #111111;" BorderPane.alignment="CENTER">
+                  <AnchorPane prefHeight="100.0" prefWidth="1100.0" BorderPane.alignment="CENTER">
                      <children>
-                        <AnchorPane fx:id="title_bar" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        <VBox fx:id="title_wrapper" prefHeight="100.0" prefWidth="1100.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                            <children>
-                              <Button fx:id="minimize" mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" text="_" textFill="WHITE" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="0.0" onAction="#handleMinimize" style="-fx-background-color: #FCB454;"/>
-                              <Button fx:id="restore_maximize" mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" text="[]" textFill="WHITE" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="0.0" onAction="#handleRestoreMaximize" style="-fx-background-color: #9DBDFF;"/>
-                              <Button fx:id="close" mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" text="X" textFill="WHITE" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" onAction="#handleClose" style="-fx-background-color: #F7374F;"/>
-                              <Label prefHeight="35.0" prefWidth="127.5" text="GameMage" textFill="WHITE" AnchorPane.leftAnchor="55.0" AnchorPane.topAnchor="0.0">
-                                 <font>
-                                    <Font name="Calibri" size="25.0" />
-                                 </font>
-                              </Label>
-                              <ImageView fitHeight="32.0" fitWidth="56.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="2.5" AnchorPane.topAnchor="2.5">
-                                 <image>
-                                    <Image url="@../icons/game-mage-icon1.png" />
-                                 </image>
-                              </ImageView>
-                              <MenuButton fx:id="file_menu" mnemonicParsing="false" prefHeight="30.0" prefWidth="70.0" text="File" AnchorPane.leftAnchor="182.5" AnchorPane.topAnchor="0.0">
-                                 <items>
-                                    <MenuItem mnemonicParsing="false" text="Import JSON File" />
-                                    <MenuItem mnemonicParsing="false" text="Export JSON File" />
-                                 </items>
-                                 <font>
-                                    <Font size="15.0" />
-                                 </font>
-                              </MenuButton>
-                              <Button fx:id="help" mnemonicParsing="false" prefHeight="30.0" prefWidth="60.0" text="Help" AnchorPane.leftAnchor="252.5" AnchorPane.topAnchor="0.0" onAction="#handleHelp">
-                                 <font>
-                                    <Font size="15.0" />
-                                 </font>
-                              </Button>
+                              <AnchorPane fx:id="title_bar" prefHeight="41.0" prefWidth="1100.0">
+                                 <children>
+                                    <Button fx:id="minimize" mnemonicParsing="false" onAction="#handleMinimize" prefHeight="40.0" prefWidth="40.0" text="_" textFill="WHITE" AnchorPane.rightAnchor="80.0" AnchorPane.topAnchor="0.0" />
+                                    <Button fx:id="restore_maximize" mnemonicParsing="false" onAction="#handleRestoreMaximize" prefHeight="40.0" prefWidth="40.0" text="[ ]" textFill="WHITE" AnchorPane.rightAnchor="40.0" AnchorPane.topAnchor="0.0" />
+                                    <Button fx:id="close" mnemonicParsing="false" onAction="#handleClose" prefHeight="40.0" prefWidth="40.0" text="X" textFill="WHITE" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                    <Label fx:id="app_title" prefHeight="40.0" prefWidth="120" text="GameMage" textFill="WHITE" AnchorPane.leftAnchor="70.0" AnchorPane.topAnchor="0.0">
+                                       <font>
+                                          <Font name="Calibri" size="25.0" />
+                                       </font>
+                                    </Label>
+                                    <ImageView fitHeight="32.0" fitWidth="56.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="10" AnchorPane.topAnchor="2.5">
+                                       <image>
+                                          <Image url="@../icons/game-mage-icon1.png" />
+                                       </image>
+                                    </ImageView>
+                                    <MenuButton fx:id="file_menu" mnemonicParsing="false" prefHeight="40.0" prefWidth="85.0" text="File" AnchorPane.leftAnchor="200.0" AnchorPane.topAnchor="0.0">
+                                       <items>
+                                          <MenuItem mnemonicParsing="false" text="Import JSON File" />
+                                          <MenuItem mnemonicParsing="false" text="Export JSON File" />
+                                       </items>
+                                       <font>
+                                          <Font size="15.0" />
+                                       </font>
+                                    </MenuButton>
+                                    <Button fx:id="help" mnemonicParsing="false" onAction="#handleHelp" prefHeight="40.0" prefWidth="75.0" text="Help" AnchorPane.leftAnchor="280.0" AnchorPane.topAnchor="0.0">
+                                       <font>
+                                          <Font size="15.0" />
+                                       </font>
+                                    </Button>
+                                 </children>
+                              </AnchorPane>
                            </children>
-                        </AnchorPane>
+                        </VBox>
                      </children>
                   </AnchorPane>
                </top>
                <right>
-                  <AnchorPane prefHeight="550.0" prefWidth="225.0" style="-fx-background-color: #555555;" BorderPane.alignment="CENTER">
+                  <AnchorPane fx:id="sideBar" prefHeight="550.0" prefWidth="225.0" BorderPane.alignment="CENTER">
                      <children>
                         <Label prefHeight="30.0" prefWidth="145.0" text="Filters" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="50.0">
                            <font>
@@ -81,7 +86,7 @@
                         <MenuButton fx:id="release_year_filter" mnemonicParsing="false" prefHeight="30.0" prefWidth="170.0" text="Release Year" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="270.0" />
                         <MenuButton fx:id="publisher_filter" mnemonicParsing="false" prefHeight="30.0" prefWidth="170.0" text="Publisher" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="315.0" />
                         <MenuButton fx:id="developper_filter" mnemonicParsing="false" prefHeight="30.0" prefWidth="170.0" text="Developper" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="360.0" />
-                        <Button fx:id="add_game" mnemonicParsing="false" prefHeight="30.0" prefWidth="100.0" text="Add Game" AnchorPane.bottomAnchor="50.0" AnchorPane.rightAnchor="60.0" onAction="#handleAddGame" style="-fx-background-color: #2D72D2; -fx-text-fill: white;">
+                        <Button fx:id="add_game" mnemonicParsing="false" onAction="#handleAddGame" prefHeight="30.0" prefWidth="100.0" text="Add Game" AnchorPane.bottomAnchor="50.0" AnchorPane.rightAnchor="60.0">
                            <font>
                               <Font name="System Bold" size="12.0" />
                            </font>
@@ -90,11 +95,11 @@
                   </AnchorPane>
                </right>
                <center>
-                  <AnchorPane prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #5E5E5E;" BorderPane.alignment="CENTER">
+                  <AnchorPane fx:id="body" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                      <children>
-                        <ScrollPane hbarPolicy="NEVER" prefHeight="450.0" prefWidth="870.0" vbarPolicy="AS_NEEDED" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="50.0" fitToWidth="true">
+                        <ScrollPane fitToWidth="true" hbarPolicy="NEVER" prefHeight="450.0" prefWidth="870.0" vbarPolicy="AS_NEEDED" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="50.0">
                            <content>
-                              <FlowPane fx:id="game_card_flow" hgap="10" prefHeight="430.0" vgap="10" minWidth="842.5">
+                              <FlowPane fx:id="game_card_flow" hgap="10" minWidth="842.5" prefHeight="430.0" vgap="10">
                                  <padding>
                                     <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                                  </padding>
@@ -122,13 +127,13 @@
                               <Button fx:id="show_favorites" mnemonicParsing="false" prefHeight="30.0" prefWidth="90.0" text="Favorites" />
                            </children>
                         </HBox>
-                        <HBox fx:id="page_control" alignment="CENTER" layoutX="337.0" layoutY="510.0" prefHeight="26.0" prefWidth="875.0" AnchorPane.bottomAnchor="13.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+                        <HBox fx:id="page_control" alignment="CENTER" prefHeight="26.0" prefWidth="875.0" AnchorPane.bottomAnchor="13.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
                            <children>
-                              <Button fx:id="first_page" mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" text="&lt;&lt;" HBox.hgrow="NEVER" />
-                              <Button fx:id="previous_page" mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" text="&lt;" HBox.hgrow="NEVER" />
-                              <TextField fx:id="page_number" editable="false" prefHeight="25.0" prefWidth="25.0" HBox.hgrow="NEVER" />
-                              <Button fx:id="next_page" mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" text="&gt;" HBox.hgrow="NEVER" />
-                              <Button fx:id="last_page" mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" text="&gt;&gt;" HBox.hgrow="NEVER" />
+                              <Button fx:id="first_page" mnemonicParsing="false" prefHeight="29.0" prefWidth="40.0" text="&lt;&lt;" HBox.hgrow="NEVER" />
+                              <Button fx:id="previous_page" mnemonicParsing="false" prefHeight="29.0" prefWidth="35.0" text="&lt;" HBox.hgrow="NEVER" />
+                              <TextField fx:id="page_number" editable="false" prefHeight="30.0" prefWidth="40.0" HBox.hgrow="NEVER" />
+                              <Button fx:id="next_page" mnemonicParsing="false" prefHeight="29.0" prefWidth="35.0" text="&gt;" HBox.hgrow="NEVER" />
+                              <Button fx:id="last_page" mnemonicParsing="false" prefHeight="29.0" prefWidth="40.0" text="&gt;&gt;" HBox.hgrow="NEVER" />
                            </children>
                         </HBox>
                      </children>

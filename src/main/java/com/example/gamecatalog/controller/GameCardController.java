@@ -19,6 +19,7 @@ public class GameCardController {
     @FXML private Label title;
     @FXML private Button game_options;
     @FXML private Label game_info;
+    
 
     private Runnable onDoubleClickAction;
     private Runnable onUpdateGame;
@@ -102,6 +103,23 @@ public class GameCardController {
 
     public void initialize(){
         setupOptionsMenu();
+        card_base.setOnMouseEntered(e -> {
+            card_base.setStyle("-fx-background-color: #3c3c3c;");
+        });
+
+        card_base.setOnMouseExited(e -> {
+            card_base.setStyle("");
+        });
+
+        game_options.setOnMouseEntered(e -> {
+            card_base.setStyle("");
+        });
+
+        game_options.setOnMouseExited(e -> {
+            if (card_base.isHover()) {
+                card_base.setStyle("-fx-background-color: #3c3c3c;");
+            }
+        });
     }
     
     private void setupOptionsMenu() {

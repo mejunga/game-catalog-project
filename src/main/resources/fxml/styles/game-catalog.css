@@ -1,0 +1,132 @@
+.root {
+    -fx-base: #1e1e1e;
+    -fx-background: #121212;
+    -fx-text-fill: #ffffff;
+    -fx-control-inner-background: #1e1e1e;
+}
+
+.button, .menu-button {
+    -fx-border-color: transparent;
+    -fx-background-color: transparent;
+}
+
+.anchor-pane {
+    -fx-background-color: #121212;
+    -fx-border-color: #3c3c3c; 
+    -fx-border-width: 1;
+}
+
+#base {
+    -fx-background-color: #1e1e1e;
+}
+
+#title_bar {
+    -fx-background-color: #1a1a1a;
+}
+
+#app_title {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+}
+
+#title_bar .label {
+    -fx-text-fill: #ffffff;
+}
+
+#title_bar .button,
+#title_bar .menu-button {
+    -fx-background-color: #1a1a1a;
+    -fx-font-size: 16px;
+    -fx-background-radius: 0px;
+}
+
+#title_bar .button:hover,
+#title_bar .menu-button:hover {
+    -fx-background-color: #2a2a2a;
+    -fx-cursor: hand;
+}
+
+.label {
+    -fx-text-fill: #ffffff;
+}
+
+.label[text="Sort By:"], .label[text="Filters"] {
+    -fx-text-fill: #ffffff;
+}
+
+.menu-button, .button {
+    -fx-background-color: #2a2a2a;
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 14px;
+    -fx-background-radius: 6;
+}
+
+#body .button, #body .menu-button,
+#sideBar .button, #sideBar .menu-button {
+    -fx-border-color: #3c3c3c;
+}
+
+.menu-button:hover, .button:hover {
+    -fx-background-color: #3c3c3c;
+}
+
+.menu-item {
+    -fx-background-color: #1e1e1e;
+    -fx-text-fill: #ffffff;
+}
+
+.menu-item:focused {
+    -fx-background-color: #3c3c3c;
+}
+
+.scroll-pane {
+    -fx-background: #121212;
+    -fx-border-color: transparent;
+}
+
+.scroll-pane .viewport {
+    -fx-background-color: #121212;
+}
+
+.text-field {
+    -fx-background-color: #1e1e1e;
+    -fx-text-fill: #ffffff;
+    -fx-prompt-text-fill: #888888;
+    -fx-border-color: #3c3c3c;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+}
+
+#page_control .button {
+    -fx-background-color: #2a2a2a;
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 13px;
+}
+
+#page_control .button:hover {
+    -fx-background-color: #3c3c3c;
+}
+
+#page_control .text-field {
+    -fx-background-color: #1e1e1e;
+    -fx-text-fill: #ffffff;
+    -fx-alignment: center;
+    -fx-font-weight: bold;
+}
+
+#help {
+    -fx-background-color: #3c3c3c;
+}
+
+#help:hover {
+    -fx-background-color: #555555;
+}
+
+.button:focused,
+.label:focused,
+.hbox:focused,
+.scroll-pane:focused,
+.anchor-pane:focused {
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+}
